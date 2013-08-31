@@ -10,20 +10,53 @@
 
 @interface QDNViewController ()
 
+@property (nonatomic, strong) IBOutlet UIWebView *webView;
+@property (nonatomic, strong) IBOutlet UIToolbar *toolBar;
+
+- (IBAction)decreaseTextSize:(id)sender;
+- (IBAction)increaseTextSize:(id)sender;
+- (void)resizeTextAdding:(NSInteger)textSizeIncrement;
+
 @end
 
 @implementation QDNViewController
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+- (void)viewWillAppear:(BOOL)animated {
+    NSURL *localFileURL = [[NSBundle mainBundle] URLForResource:@"content"
+                                                  withExtension:@"html"];
+    [self.webView loadHTMLString:
+     [NSString stringWithContentsOfURL:localFileURL
+                              encoding:NSUTF8StringEncoding
+                                 error:NULL]
+                         baseURL:nil];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (IBAction)decreaseTextSize:(id)sender {
+    [self resizeTextAdding:-1];
+}
+
+- (IBAction)increaseTextSize:(id)sender {
+    [self resizeTextAdding:1];
+}
+
+- (void)resizeTextAdding:(NSInteger)textSizeIncrement {
+    NSString *jsString = [NSString stringWithFormat:@"resizeText(%d)", textSizeIncrement];
+
+    [self.webView stringByEvaluatingJavaScriptFromString:jsString];
+}
+
+#pragma mark - UIWebViewDelegate methods
+
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request
+ navigationType:(UIWebViewNavigationType)navigationType {
+    
+    if ([request.URL.scheme caseInsensitiveCompare:@"nativeAction"] == NSOrderedSame) {
+        [UIView animateWithDuration:0.3 animations:^{
+            self.toolBar.alpha = (1 - self.toolBar.alpha);
+        }];
+    }
+
+    return YES;
 }
 
 @end

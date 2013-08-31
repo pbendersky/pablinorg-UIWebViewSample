@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface QDNViewController : UIViewController
+@interface QDNViewController : UIViewController < UIWebViewDelegate >
 
 @end

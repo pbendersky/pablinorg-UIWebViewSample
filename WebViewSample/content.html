@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <script language="javascript">
+            function resizeText(multiplier) {
+                if (document.body.style.fontSize == "") {
+                    document.body.style.fontSize = "1.0em";
+                }
+                document.body.style.fontSize =
+                parseFloat(document.body.style.fontSize) +
+                (multiplier * 0.2) + "em";
+            }
+            
+            function touchStart(event) {
+                sX = event.touches[0].clientX;
+                sY = event.touches[0].clientY;
+            }
+            
+            function touchEnd(event) {
+                var parentNode = event.target.parentNode
+                if ( parentNode != null && parentNode.nodeName.toLowerCase() == "a" )
+                    return;
+                
+                if (event.changedTouches[0].clientX == sX &&
+                    event.changedTouches[0].clientY == sY) {
+                    
+                    window.location = "nativeAction://hideShow";
+                }
+            }
+            
+            document.addEventListener("touchstart", touchStart, false);
+            document.addEventListener("touchend", touchEnd, false);
+
+            </script>
+    </head>
+    <body>
+       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+       Proin at justo malesuada, accumsan justo non, dapibus ante.
+       Maecenas luctus at magna nec convallis. Suspendisse ac
+       purus molestie mauris porttitor viverra sed a risus. Aliquam
+       pellentesque gravida ante, eu mattis lectus.
+    </body>
+</html>
